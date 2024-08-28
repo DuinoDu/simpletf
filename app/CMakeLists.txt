@@ -1,0 +1,2 @@
+add_executable(simpletf_app simpletf_app.cpp)
+target_link_libraries(simpletf_app PRIVATE simpletf)
