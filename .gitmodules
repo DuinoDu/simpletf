@@ -4,3 +4,6 @@
 [submodule "ext/pybind11"]
 	path = ext/pybind11
 	url = https://github.com/pybind/pybind11.git
+[submodule "ext/glog"]
+	path = ext/glog
+	url = https://github.com/google/glog.git

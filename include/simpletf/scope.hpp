@@ -1,16 +1,23 @@
 #pragma once
+#include <memory>
 
 namespace simpletf {
 
+class Graph;
+
 class Scope
 {
-private:
-    /* data */
 public:
     Scope(/* args */);
-    ~Scope();
+    ~Scope() {};
 
     static Scope NewRootScope();
+
+    Graph* graph();
+    std::shared_ptr<Graph> graph_as_shared_ptr() const;
+
+private:
+    std::shared_ptr<Graph> graph_;
 };
 
 }

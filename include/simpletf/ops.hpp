@@ -1,6 +1,8 @@
 #pragma once
 
-#include "simpletf/simpletf.hpp"
+#include "simpletf/scope.hpp"
+#include <string>
+#include <vector>
 
 namespace simpletf {
 
@@ -11,10 +13,19 @@ class Const
 private:
     /* data */
 public:
-    Const(/* args */);
-    ~Const();
+    Const(const Scope& scope, const std::string& value);
+    ~Const() {};
 };
 
+
+class StringJoin
+{
+private:
+    /* data */
+public:
+    StringJoin(const Scope& scope, const std::vector<std::string>& inputs);
+    ~StringJoin() {};
+};
 
 }
 }

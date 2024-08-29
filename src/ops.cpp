@@ -4,14 +4,11 @@ namespace simpletf {
 
 namespace ops {
 
-Const::Const(/* args */)
+Const::Const(const Scope& scope, const std::string& value)
 {
-}
 
-Const::~Const()
-{
 }
 
 
-}
-}
+}   // namespace ops
+}   // namespace simpletf

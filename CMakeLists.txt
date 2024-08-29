@@ -15,9 +15,12 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Compilation options
 option(BUILD_PYTHON "Enable building of Python bindings" OFF)
 
+# # logging
+# add_subdirectory(ext/glog)
+# include_directories(BEFORE ext/glog/src)
+
 # compile the library
 add_subdirectory(src)
-
 
 # compile the application
 add_subdirectory(app)
