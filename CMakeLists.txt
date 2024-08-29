@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Compilation options
-option(BUILD_PYTHON "Enable building of Python bindings" ON)
+option(BUILD_PYTHON "Enable building of Python bindings" OFF)
 
 # compile the library
 add_subdirectory(src)
