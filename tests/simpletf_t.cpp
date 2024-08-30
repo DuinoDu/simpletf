@@ -126,3 +126,17 @@ TEST_CASE( "basic_graph", "[graph]" ){
   // REQUIRE(outputs[0].flat<int>() == 5);
 
 }
+
+TEST_CASE( "graph_registry", "[graph]" ){
+  // 获取全局操作注册表实例
+  OpRegistry* registry = OpRegistry::Global();
+ 
+  // 注册操作
+  registry->RegisterOp("Add");
+  registry->RegisterOp("Multiply");
+ 
+  // 查找操作
+  auto op = registry->FindOp("Add");
+  REQUIRE(op != nullptr);
+  REQUIRE(op->name == "Add");
+}
