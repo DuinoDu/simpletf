@@ -4,7 +4,6 @@
 #include "simpletf/scope.hpp"
 #include "simpletf/client_session.hpp"
 
-
 namespace simpletf {
 
 int add_one(int x);

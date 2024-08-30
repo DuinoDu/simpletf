@@ -8,6 +8,8 @@ namespace simpletf {
 
 namespace ops {
 
+
+
 class Const
 {
 private:

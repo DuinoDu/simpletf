@@ -19,7 +19,7 @@ TEST_CASE( "hello_world", "[basic]" ){
   auto space = Const(scope, std::string(" "));
   auto world = Const(scope, std::string("world !"));
   
-  auto joinOp = StringJoin(scope, {hello, space, world});
+  // auto joinOp = StringJoin(scope, {hello, space, world});
 
   ClientSession session(scope);
   // std::vector<Tensor> outputs;
@@ -43,24 +43,21 @@ TEST_CASE( "basic_opertion", "[basic]" ){
   // REQUIRE(outputs[0].flat<int>() == 5);
 }
 
-TEST_CASE( "basic_tensor", "[basic]" ){
-  REQUIRE(true);
-
-  // auto scope = Scope::NewRootScope();
-  // auto a = Placeholder(scope, DT_INT32);
-  // auto b = Placeholder(scope, DT_INT32);
-  // auto c = Add(scope, a, b);
-
-  // ClientSession session(scope);
-  // std::vector<Tensor> outputs;
-  // TF_CHECK_OK(session.Run({{{a, 2}, {b, 3}}}, {c}, &outputs));
-  // REQUIRE(outputs[0].flat<int>() == 5);
-}
-
 TEST_CASE( "basic_tensor", "[tensor]" ){
   REQUIRE(true);
 
   auto scope = Scope::NewRootScope();
+
+  // {
+  //   auto a = Placeholder(scope, DT_INT32);
+  //   auto b = Placeholder(scope, DT_INT32);
+  //   auto c = Add(scope, a, b);
+
+  //   ClientSession session(scope);
+  //   std::vector<Tensor> outputs;
+  //   TF_CHECK_OK(session.Run({{{a, 2}, {b, 3}}}, {c}, &outputs));
+  //   REQUIRE(outputs[0].flat<int>() == 5);
+  // }
 
   // {
   //   auto aScalar = Input(2);
@@ -96,7 +93,7 @@ TEST_CASE( "basic_tensor", "[tensor]" ){
 
 }
 
-TEST_CASE( "basic_tensor", "[graph]" ){
+TEST_CASE( "basic_graph", "[graph]" ){
   REQUIRE(true);
 
   auto scope = Scope::NewRootScope();
