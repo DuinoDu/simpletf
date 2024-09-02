@@ -54,6 +54,21 @@ const std::string& Node::name() const
 const std::string& Node::op_type() const
 {
     return op_type_;
+
+}
+
+std::vector<Node*>& Node::inputs()
+{
+    std::vector<Node*> inputs;
+    for (const auto& input_name : input_names_) {
+        inputs.push_back(input_nodes_[input_name]);
+    }
+    return inputs;
+}
+
+const std::unordered_map<std::string, Node*>& Node::output_nodes() const
+{
+    return output_nodes_;
 }
 
 const std::vector<std::string>& Node::input_names() const
@@ -136,19 +151,28 @@ void SetAttrValue<bool>(AttrValue& attr_value, const bool& value)
     attr_value.bool_value_ = value;
 }
 
+template <>
+void SetAttrValue<DataType>(AttrValue& attr_value, const DataType& value)
+{
+    attr_value.type_ = AttrValue::Type::DataType;
+    attr_value.dtype_value_ = value;
+}
+
+/************************ NodeBuilder *************************/
 
 NodeBuilder::NodeBuilder(const std::string& op_name, const std::string& node_name)
     : op_name_(op_name), node_name_(node_name) {}
 
-template <typename T>
-NodeBuilder& NodeBuilder::Attr(const std::string& name, const T& value)
+NodeBuilder& NodeBuilder::Input(const std::vector<Output>& inputs)
 {
-    SetAttrValue(attrs_[name], value);
+    inputs_ = inputs;
+    // TODO: generate NodeDef for inputs
     return *this;
 }
 
 Status NodeBuilder::Finalize(Graph* graph, Node** created_node) const
 {
+    // Create a node definition
     NodeDef node_def;
     node_def.set_name(node_name_);
     node_def.set_op(op_name_);
@@ -156,6 +180,7 @@ Status NodeBuilder::Finalize(Graph* graph, Node** created_node) const
         node_def.mutable_attr()[attr.first] = attr.second;
     }
 
+    // Add the node to the graph
     Status status = graph->AddNode(node_def, created_node);
     if (!status.ok()) {
         return status;

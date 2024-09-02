@@ -49,9 +49,30 @@ std::string Scope::GetUniqueNameForOp(const std::string& name) const
 }
 
 Status Scope::DoShapeInference(Node* node)
-{   
-    // TODO: Implement shape inference
-    return absl::OkStatus();
+{  
+    if (node == nullptr) {
+        return Status(StatusCode::kInvalidArgument, "Node is null");
+    }
+    const std::vector<Node*> inputs = node->inputs();
+    if (inputs.empty()) {
+        return Status(StatusCode::kInvalidArgument, "Node has not input");
+    }
+
+    ShapeRefiner* shape_refiner = this->shape_refiner_;
+    if (shape_refiner == nullptr) {
+        return Status(StatusCode::kInternal, "Shape refiner is null");
+    }
+
+    for (Node* input : inputs) {
+        Status status = shape_refiner->AddNode(input);
+        if (!status.ok()) {
+            return status;
+        }
+    }
+
+
+
+    return shape_refiner_->AddNode(node);
 }
 
 } // namespace simpletf

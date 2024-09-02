@@ -60,35 +60,17 @@ private:
 
 class Input {
 public:
+
+    /* Initializer converts various c++ types to Tensor. */
     struct Initializer {
+        Initializer(const std::string& v) {
+            tensor = Tensor({1}, DataType::String);
+            tensor.flat<std::string>().at(0) = v;
+            status = absl::OkStatus();
+        }
+        Initializer(const Tensor& t) : tensor(t) {}  
         Status status;
         Tensor tensor;
-
-        // TODO
-        template <typename T, typename = typename std::enable_if<
-                              std::is_arithmetic<T>::value ||
-                              std::is_convertible<T, std::string>::value>::type>
-        Initializer(const T& v) {
-            // typedef typename RealType<T>::type RealT;
-            // Tensor t(DataTypeToEnum<RealT>::v(), TensorShape());
-
-            // Tensor t(DataTypeToEnum<RealT>::v(), {1});
-            // t.flat<RealT>().at(0) = RealT(v);
-            Tensor t({1}, DataType::String);
-            tensor = t;
-        }
-
-        Initializer(const Tensor& t) : tensor(t) {}  
-
-        template <typename T, bool = std::is_convertible<T, std::string>::value>
-        struct RealType {
-            typedef T type;
-        };
-
-        template <typename T>
-        struct RealType<T, false> {
-            typedef T type;
-        };
     };
 
     Input(const Output& o) : output_(o) {}

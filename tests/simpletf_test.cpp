@@ -12,19 +12,8 @@ TEST_CASE( "hello_world", "[basic]" ){
 
   {
     auto hello = Const(scope, std::string("hello"));
-    Session session(scope);
-    std::vector<Tensor> outputs;
-    CHECK_OK(session.Run({hello}, &outputs));
-    // REQUIRE(outputs.size() == 1);
-    // REQUIRE(outputs[0].flat<std::string>() == "hello");
-  }
-
-  {
-    auto hello = Const(scope, std::string("hello"));
-    auto space = Const(scope, std::string(" "));
-    auto world = Const(scope, std::string("world !"));
-  
-    // auto joinOp = StringJoin(scope, {hello, space, world});
+    auto world = Const(scope, std::string("world!"));
+    auto joinOp = StringJoin(scope, {hello, world});
 
     Session session(scope);
     // std::vector<Tensor> outputs;
@@ -147,3 +136,24 @@ TEST_CASE( "graph_registry", "[graph]" ){
   REQUIRE(op != nullptr);
   REQUIRE(op->name == "Add");
 }
+
+/*
+TEST_CASE("face_change", "[pipeline]" ){
+
+  // client side
+  auto scope = Scope::NewRootScope();
+  auto vst_image = Placeholder(scope, "vst_image");
+  auto face_detector = FaceDetector(scope, vst_image, model_path="xxx.bin")
+  auto face_nms = NMS(scope, face_detector, nms_threshold=0.5f);
+  auto landmark_detector = LandmarkDetector(scope, {vst_image, face_nms}, model_path="xxx.bin");
+  auto solve_pnp = SolvePnP(scope, landmark_detector, args=0.5f);
+  auto renderer = Renderer(scope, solve_pnp, glTF_path="xxx.glb", thread_idx=1);
+  openmr_submit(scope, renderer);
+
+  // server side
+  auto scope = Scope::NewRootScope();
+  scope.receive_from_client();  // recover graph from client
+  Session session(scope);
+  CHECK_OK(session.Run({{"vst_image", vst_image_data}}, &outputs);
+}
+*/

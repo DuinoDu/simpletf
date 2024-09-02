@@ -1,5 +1,5 @@
 file(GLOB CPP_SOURCES "*.cpp")
-add_library(simpletf ${CPP_SOURCES})
+add_library(simpletf STATIC ${CPP_SOURCES})
 
 target_link_libraries(simpletf PUBLIC absl::status absl::log)
 

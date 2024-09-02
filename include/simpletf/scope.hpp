@@ -35,7 +35,10 @@ public:
 
     std::string GetUniqueNameForOp(const std::string& name) const;
 
-    void UpdateBuilder(NodeBuilder* builder) {}
+    /*
+    * Update the builder for the node using scope info.
+    */
+    void UpdateBuilder(NodeBuilder* builder) const {}
 
     /* 
     * Do shape inference for the node. It will update the node's output shapes.

@@ -25,6 +25,10 @@ public:
         return size_;
     }
 
+    T* data() const {  
+        return data_;
+    }
+
 private:
     T* data_;
     size_t size_;
@@ -43,60 +47,24 @@ public:
         Invalid = 6,
     };
 
+
     Tensor() : data_(nullptr), size_(0), dtype_(DataType::Invalid) {}
 
     // 构造函数
     Tensor(const std::vector<int>& shape, DataType dtype)
         : shape_(shape), size_(CalculateSize(shape)), dtype_(dtype) {
-        switch (dtype_) {
-            case DataType::Float:
-                data_ = new float[size_];
-                break;
-            case DataType::Int:
-                data_ = new int[size_];
-                break;
-            case DataType::String:
-                data_ = new std::string[size_];
-                break;
-            case DataType::Bool:
-                data_ = new bool[size_];
-                break;
-            case DataType::Double:
-                data_ = new double[size_];
-                break;
-            case DataType::Long:
-                data_ = new long[size_];
-                break;
-            default:
-                throw std::invalid_argument("Unsupported data type");
-        }
+        AllocateData();
+    }
+
+    // 拷贝构造函数    
+    Tensor(const Tensor& other) : shape_(other.shape_), size_(other.size_), dtype_(other.dtype_) {
+        AllocateData();
+        CopyData(other.data_);
     }
 
     // 析构函数
     ~Tensor() {
-        if (data_ == nullptr) return;
-        switch (dtype_) {
-            case DataType::Float:
-                delete[] static_cast<float*>(data_);
-                break;
-            case DataType::Int:
-                delete[] static_cast<int*>(data_);
-                break;
-            case DataType::String:
-                delete[] static_cast<std::string*>(data_);
-                break;
-            case DataType::Bool:
-                delete[] static_cast<bool*>(data_);
-                break;
-            case DataType::Double:
-                delete[] static_cast<double*>(data_);
-                break;
-            case DataType::Long:
-                delete[] static_cast<long*>(data_);
-                break;
-            default:
-                break;
-        }
+        DeallocateData();
     }
 
     // 获取形状
@@ -133,7 +101,7 @@ public:
             if (dtype_ != DataType::Long) throw std::bad_variant_access();
             return *(static_cast<long*>(data_) + index);
         } else {
-            throw std::invalid_argument("Unsupported data type");
+            throw std::invalid_argument("Unsupported data type in at()");
         }
     }
 
@@ -170,9 +138,21 @@ public:
             if (dtype_ != DataType::Long) throw std::bad_variant_access();
             return Flat<T>(static_cast<long*>(data_), size_);
         } else {
-            throw std::invalid_argument("Unsupported data type");
+            throw std::invalid_argument("Unsupported data type in flat()");
         }
     }    
+
+    Tensor& operator=(const Tensor& other) {
+        if (this != &other) {
+            DeallocateData();
+            shape_ = other.shape_;
+            size_ = other.size_;
+            dtype_ = other.dtype_;
+            AllocateData();
+            CopyData(other.data_);
+        }
+        return *this;
+    }
 
 private:
     std::vector<int> shape_;    // 张量的形状
@@ -187,6 +167,91 @@ private:
             size *= dim;
         }
         return size;
+    }
+
+    // 分配数据
+    void AllocateData() {
+        switch (dtype_) {
+            case DataType::Float:
+                data_ = new float[size_];
+                break;
+            case DataType::Int:
+                data_ = new int[size_];
+                break;
+            case DataType::String:
+                data_ = new std::string[size_];
+                break;
+            case DataType::Bool:
+                data_ = new bool[size_];
+                break;
+            case DataType::Double:
+                data_ = new double[size_];
+                break;
+            case DataType::Long:
+                data_ = new long[size_];
+                break;
+            case DataType::Invalid:
+                data_ = nullptr;
+                break;
+            default:
+                throw std::invalid_argument("Unsupported data type in AllocateData()");
+        }
+    }
+
+    // 释放数据
+    void DeallocateData() {
+        if (data_ == nullptr) return;
+        switch (dtype_) {
+            case DataType::Float:
+                delete[] static_cast<float*>(data_);
+                break;
+            case DataType::Int:
+                delete[] static_cast<int*>(data_);
+                break;
+            case DataType::String:
+                delete[] static_cast<std::string*>(data_);
+                break;
+            case DataType::Bool:
+                delete[] static_cast<bool*>(data_);
+                break;
+            case DataType::Double:
+                delete[] static_cast<double*>(data_);
+                break;
+            case DataType::Long:
+                delete[] static_cast<long*>(data_);
+                break;
+            default:
+                break;
+        }
+        data_ = nullptr;
+    }
+
+    // 复制数据
+    void CopyData(void* source) {
+        switch (dtype_) {
+            case DataType::Float:
+                std::copy(static_cast<float*>(source), static_cast<float*>(source) + size_, static_cast<float*>(data_));
+                break;
+            case DataType::Int:
+                std::copy(static_cast<int*>(source), static_cast<int*>(source) + size_, static_cast<int*>(data_));
+                break;
+            case DataType::String:
+                std::copy(static_cast<std::string*>(source), static_cast<std::string*>(source) + size_, static_cast<std::string*>(data_));
+                break;
+            case DataType::Bool:
+                std::copy(static_cast<bool*>(source), static_cast<bool*>(source) + size_, static_cast<bool*>(data_));
+                break;
+            case DataType::Double:
+                std::copy(static_cast<double*>(source), static_cast<double*>(source) + size_, static_cast<double*>(data_));
+                break;
+            case DataType::Long:
+                std::copy(static_cast<long*>(source), static_cast<long*>(source) + size_, static_cast<long*>(data_));
+                break;
+            case DataType::Invalid:
+                break;
+            default:
+                throw std::invalid_argument("Unsupported data type in CopyData()");
+        }
     }
 };
 

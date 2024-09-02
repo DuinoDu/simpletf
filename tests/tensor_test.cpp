@@ -60,4 +60,11 @@ TEST_CASE( "tensor_access", "[tensor]" ){
     REQUIRE(t2.at<std::string>(3) == "is");
     REQUIRE(t2.at<std::string>(4) == "a");
     REQUIRE(t2.at<std::string>(5) == "test");
-}
+
+    Tensor t3;
+    t3 = t2;
+    REQUIRE(t3.at<std::string>(0) == "hello");
+
+    Tensor t4 = t2;
+    REQUIRE(t4.at<std::string>(0) == "hello");
+ }
