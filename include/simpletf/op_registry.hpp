@@ -25,6 +25,8 @@ public:
         if (ops_.find(name) == ops_.end()) {
             ops_[name] = std::make_shared<OpDef>(name);
             LOG(INFO) << "Registered op: " << name;
+        } else {
+            LOG(WARNING) << "Op already registered: " << name;
         }
     }
 

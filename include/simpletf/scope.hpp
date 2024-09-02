@@ -9,6 +9,7 @@ namespace simpletf {
 class Node;
 class Graph;
 class ShapeRefiner;
+class NodeBuilder;
 
 using NameMap = std::unordered_map<std::string, Node*>;
 
@@ -29,6 +30,19 @@ public:
     NameMap* name_map();
 
     ShapeRefiner* shape_refiner();
+
+    void UpdateStatus(const Status& status);
+
+    std::string GetUniqueNameForOp(const std::string& name) const;
+
+    void UpdateBuilder(NodeBuilder* builder) {}
+
+    /* 
+    * Do shape inference for the node. It will update the node's output shapes.
+    * @param node The node to do shape inference for.
+    * @return The status of the shape inference.
+    */
+    Status DoShapeInference(Node* node);
 
 private:
     std::shared_ptr<Graph> graph_;

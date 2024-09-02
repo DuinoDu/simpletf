@@ -32,6 +32,26 @@ Status Scope::status() const
     return *status_;
 }
 
-
-
+void Scope::UpdateStatus(const Status& status)
+{
+    *status_ = status;
 }
+
+std::string Scope::GetUniqueNameForOp(const std::string& name) const
+{
+    std::string unique_name = name;
+    int counter = 0;
+    while (name_map_->count(unique_name)) {
+        unique_name = name + "/" + std::to_string(counter++);
+    }
+    name_map_->insert({unique_name, nullptr});
+    return unique_name;
+}
+
+Status Scope::DoShapeInference(Node* node)
+{   
+    // TODO: Implement shape inference
+    return absl::OkStatus();
+}
+
+} // namespace simpletf

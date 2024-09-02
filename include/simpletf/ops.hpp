@@ -1,6 +1,7 @@
 #pragma once
 
 #include "simpletf/scope.hpp"
+#include "simpletf/op_core.hpp"
 #include <string>
 #include <vector>
 
@@ -8,26 +9,10 @@ namespace simpletf {
 
 namespace ops {
 
+Output Const(const Scope& scope, const Input::Initializer& val);
+
+// Output StringJoin(const Scope& scope, const std::vector<Output>& inputs);
 
 
-class Const
-{
-private:
-    /* data */
-public:
-    Const(const Scope& scope, const std::string& value);
-    ~Const() {};
-};
-
-
-class StringJoin
-{
-private:
-    /* data */
-public:
-    StringJoin(const Scope& scope, const std::vector<std::string>& inputs);
-    ~StringJoin() {};
-};
-
-}
-}
+} // namespace ops
+} // namespace simpletf

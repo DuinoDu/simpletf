@@ -5,28 +5,35 @@
 using namespace simpletf;
 using namespace simpletf::ops;
 
-TEST_CASE( "add_one", "[adder]" ){
-  REQUIRE(add_one(0) == 1);
-  REQUIRE(add_one(123) == 124);
-  REQUIRE(add_one(-1) == 0);
-}
 
 TEST_CASE( "hello_world", "[basic]" ){
 
   auto scope = Scope::NewRootScope();
 
-  auto hello = Const(scope, std::string("hello"));
-  auto space = Const(scope, std::string(" "));
-  auto world = Const(scope, std::string("world !"));
+  {
+    auto hello = Const(scope, std::string("hello"));
+    Session session(scope);
+    std::vector<Tensor> outputs;
+    CHECK_OK(session.Run({hello}, &outputs));
+    // REQUIRE(outputs.size() == 1);
+    // REQUIRE(outputs[0].flat<std::string>() == "hello");
+  }
+
+  {
+    auto hello = Const(scope, std::string("hello"));
+    auto space = Const(scope, std::string(" "));
+    auto world = Const(scope, std::string("world !"));
   
-  // auto joinOp = StringJoin(scope, {hello, space, world});
+    // auto joinOp = StringJoin(scope, {hello, space, world});
 
-  ClientSession session(scope);
-  // std::vector<Tensor> outputs;
-  // TF_CHECK_OK(session.Run({joinOp}, &outputs));
+    Session session(scope);
+    // std::vector<Tensor> outputs;
+    // TF_CHECK_OK(session.Run({joinOp}, &outputs));
 
-  // REQUIRE(outputs[0].flat<std::string>() == "hello world !");
-  // REQUIRE(outputs[0].DebugString() == "hello world !");
+    // REQUIRE(outputs[0].flat<std::string>() == "hello world !");
+    // REQUIRE(outputs[0].DebugString() == "hello world !");
+
+  }
 }
 
 TEST_CASE( "basic_opertion", "[basic]" ){
@@ -37,7 +44,7 @@ TEST_CASE( "basic_opertion", "[basic]" ){
   // auto b = Const(scope, 3);
   // auto c = Add(scope, a, b);
 
-  // ClientSession session(scope);
+  // Session session(scope);
   // std::vector<Tensor> outputs;
   // TF_CHECK_OK(session.Run({c}, &outputs));
   // REQUIRE(outputs[0].flat<int>() == 5);
@@ -53,7 +60,7 @@ TEST_CASE( "basic_tensor", "[tensor]" ){
   //   auto b = Placeholder(scope, DT_INT32);
   //   auto c = Add(scope, a, b);
 
-  //   ClientSession session(scope);
+  //   Session session(scope);
   //   std::vector<Tensor> outputs;
   //   TF_CHECK_OK(session.Run({{{a, 2}, {b, 3}}}, {c}, &outputs));
   //   REQUIRE(outputs[0].flat<int>() == 5);
@@ -78,7 +85,7 @@ TEST_CASE( "basic_tensor", "[tensor]" ){
   //   //         [1]
   //   auto x = MatMul(scope, {{1, 1}}, {{41}, {1}});
 
-  //   ClientSession session(scope);
+  //   Session session(scope);
   //   std::vector<Tensor> outputs;
 
   //   auto status = session.Run({x}, &outputs);
